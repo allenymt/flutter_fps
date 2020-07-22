@@ -1,4 +1,3 @@
-
 import 'package:fps/binding_fps.dart';
 import 'package:fps/fps_computer.dart';
 
@@ -20,11 +19,10 @@ class FpsHelper {
 
   bool _start;
 
-  start(){
-    if (_start ?? false)
-      return;
+  start() {
+    if (_start ?? false) return;
     _start = true;
-    BindingFps.instance.init();
+    BindingFps.instance.start();
     BindingFps.instance.registerCallBack((fps, dropCount) {
       if (_aliFpsAvg == 0) {
         _aliFpsAvg = fps;

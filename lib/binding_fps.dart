@@ -15,8 +15,9 @@ import 'plugin/fps_plugin.dart';
 /// handleBeginFrame Called by the engine to prepare the framework to produce a new frame.
 /// handleDrawFrame Called by the engine to produce a new frame.
 /// 在一秒内计算从begin->draw调用了多少次，次数就是帧数，如果帧数少于手机的渲染帧数，会认为丢失了多少帧
+/// 参考文章 https://developer.aliyun.com/article/699875
+@Deprecated("统计不准，只有cpu部分，即ui线程 build layout paint部分")
 class BindingFps {
-
   /// 单例
   static BindingFps _instance;
 
@@ -35,12 +36,13 @@ class BindingFps {
   ListQueue<_FpsFrame> _frameQueue = ListQueue(MAX_FPS);
   bool _init;
   List<FpsCallback> _callBackList = [];
+
   /// 一般手机为60帧
   double _fpsHz;
 
   BindingFps._();
 
-  init() {
+  start() async {
     if (_init ?? false) {
       // 避免重复初始化
       return;
@@ -50,6 +52,12 @@ class BindingFps {
       _calFps();
     });
     _registerListener();
+
+    // 获取当前手机的fps
+    if (_fpsHz == null) {
+      _fpsHz = await FpsPlugin.getRefreshRate;
+    }
+
     _init = true;
   }
 
@@ -74,6 +82,7 @@ class BindingFps {
 
   /// 当前帧
   _FpsFrame _currentFrame;
+
   /// 帧数的id
   var frameId = 1;
   FrameCallback beginTimeCallback;
@@ -83,9 +92,9 @@ class BindingFps {
   _registerListener() {
     beginTimeCallback = (timeStamp) {
       // handle begin frame
-      _beginFrame(timeStamp);
+      _beginFrame();
 
-      if (drawTimeCallback != null){
+      if (drawTimeCallback != null) {
         beginCallId =
             WidgetsBinding.instance.scheduleFrameCallback(beginTimeCallback);
       }
@@ -98,23 +107,25 @@ class BindingFps {
 
     drawTimeCallback = (timeStamp) {
       // handle draw frame
-      _drawFrame(timeStamp);
+      _drawFrame();
     };
     WidgetsBinding.instance.addPersistentFrameCallback(drawTimeCallback);
   }
 
-  _beginFrame(Duration time) {
+  _beginFrame() {
     if (_currentFrame == null) {
-      _currentFrame = _FpsFrame(frameId++, frameStartTime: time.inMicroseconds);
+      _currentFrame =
+          _FpsFrame(frameId++, frameStartTime: DateTime.now());
     } else {
       _currentFrame.clear();
+      if (frameId > 10000) frameId = 0;
       _currentFrame.frameId = frameId++;
-      _currentFrame.frameStartTime = time.inMicroseconds;
+      _currentFrame.frameStartTime = DateTime.now();
     }
   }
 
-  _drawFrame(Duration time) {
-    if (_currentFrame == null || (_currentFrame?.frameStartTime ?? 0) <= 0) {
+  _drawFrame() {
+    if (_currentFrame == null || _currentFrame?.frameStartTime == null) {
       DebugLog.instance.log("$TAG,error not begin");
       return;
     }
@@ -124,30 +135,25 @@ class BindingFps {
       return;
     }
 
-    _currentFrame.frameEndTime = time.inMilliseconds;
+    _currentFrame.frameEndTime = DateTime.now();
     _frameQueue.addFirst(_currentFrame);
   }
 
   /// 计算fps
-  _calFps() async{
+  _calFps() async {
     if (_frameQueue.isEmpty) {
       DebugLog.instance.log("$TAG,NO FRAME");
       return;
     }
-    // 获取当前手机的fps
-    if (_fpsHz == null) {
-      _fpsHz = await FpsPlugin.getRefreshRate;
-    }
 
-    while (_frameQueue.length >_fpsHz){
+    while (_frameQueue.length > _fpsHz) {
       _frameQueue.removeLast();
     }
 
-    var _calFrameQueue = ListQueue(MAX_FPS);
+    var _calFrameQueue = ListQueue(_frameQueue.length);
     _calFrameQueue.addAll(_frameQueue);
     _frameQueue?.clear();
-
-    while (_calFrameQueue.length > MAX_FPS) {
+    while (_calFrameQueue.length > _fpsHz) {
       _calFrameQueue.removeLast();
     }
     double drawFrame = _calFrameQueue.length?.toDouble();
@@ -155,20 +161,23 @@ class BindingFps {
     _callBackList?.forEach((callBack) {
       callBack(drawFrame.toDouble(), dropFrameCount.toDouble());
     });
-    DebugLog.instance.log("$TAG _fpsHz is $_fpsHz drawFrame is $drawFrame,dropFrameCount is $dropFrameCount");
+    DebugLog.instance.log(
+        "BindingFps _fpsHz is $_fpsHz drawFrame is $drawFrame,dropFrameCount is $dropFrameCount");
   }
 }
 
 class _FpsFrame {
-  int frameStartTime;
-  int frameEndTime;
+  DateTime frameStartTime;
+  DateTime frameEndTime;
   int frameId;
 
   _FpsFrame(this.frameId, {this.frameStartTime, this.frameEndTime});
 
+  int get frameTime => frameEndTime.millisecond - frameStartTime.millisecond;
+
   clear() {
-    frameStartTime = 0;
-    frameEndTime = 0;
+    frameStartTime = null;
+    frameEndTime = null;
     frameId = 0;
   }
 }
