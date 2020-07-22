@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/scheduler.dart';
 import 'package:fps/plugin/fps_plugin.dart';
 import 'fps_callback.dart';
+import 'util/debug_log.dart';
 
 ///
 /// fps 获取
@@ -130,6 +131,8 @@ class Fps {
     //丢帧数=总帧数-绘制帧数
     droppedCount = costCount - drawFramesCount;
     double fps = drawFramesCount * _fpsHz / costCount; //参考上面那四行公式
+    DebugLog.instance.log("computerFps _fpsHz is $_fpsHz drawFrame is $fps,dropFrameCount is $droppedCount");
+    lastFrames.clear();
     _callBackList?.forEach((callBack) {
       callBack(fps, droppedCount.toDouble());
     });

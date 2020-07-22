@@ -139,6 +139,10 @@ class BindingFps {
       _fpsHz = await FpsPlugin.getRefreshRate;
     }
 
+    while (_frameQueue.length >_fpsHz){
+      _frameQueue.removeLast();
+    }
+
     var _calFrameQueue = ListQueue(MAX_FPS);
     _calFrameQueue.addAll(_frameQueue);
     _frameQueue?.clear();
@@ -151,7 +155,7 @@ class BindingFps {
     _callBackList?.forEach((callBack) {
       callBack(drawFrame.toDouble(), dropFrameCount.toDouble());
     });
-    DebugLog.instance.log("$TAG drawFrame is $drawFrame,dropFrameCount is $dropFrameCount");
+    DebugLog.instance.log("$TAG _fpsHz is $_fpsHz drawFrame is $drawFrame,dropFrameCount is $dropFrameCount");
   }
 }
 

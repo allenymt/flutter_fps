@@ -20,13 +20,17 @@ class TestFpsState extends State<TestFpsWidget> {
       children: <Widget>[
         GestureDetector(
           child: Container(
-            constraints: BoxConstraints.tightFor(width: 100, height: 50),
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.only(top: 20,bottom: 20),
             alignment: Alignment.center,
-            child: Text("open fps"),
-            color: Colors.red,
+            child: Text(
+              "open fps",
+              style: TextStyle(color: Colors.black),
+            ),
+            color: Colors.black12,
           ),
           onTap: () {
-            FpsHelper.instance.init();
+            FpsHelper.instance.start();
           },
         ),
         SizedBox(
@@ -34,10 +38,14 @@ class TestFpsState extends State<TestFpsWidget> {
         ),
         GestureDetector(
           child: Container(
-            constraints: BoxConstraints.tightFor(width: 100, height: 50),
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.only(top: 20,bottom: 20),
             alignment: Alignment.center,
-            child: Text("close fps"),
-            color: Colors.green,
+            child: Text(
+              "close fps",
+              style: TextStyle(color: Colors.black),
+            ),
+            color: Colors.black12,
           ),
           onTap: () {
             FpsHelper.instance.cancel();
@@ -48,11 +56,12 @@ class TestFpsState extends State<TestFpsWidget> {
         ),
         GestureDetector(
           child: Container(
-            constraints: BoxConstraints.tightFor(width: 300, height: 50),
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.only(top: 20,bottom: 20),
             alignment: Alignment.center,
             child: Text(
-                "aliFps is ${FpsHelper.instance.aliFpsAvg}, wdFps is ${FpsHelper.instance.wdFpsAvg}"),
-            color: Colors.deepOrange,
+                "bindingFps is ${FpsHelper.instance.aliFpsAvg?.floor()}, computerFps is ${FpsHelper.instance.wdFpsAvg?.floor()}"),
+            color: Colors.black12,
           ),
           onTap: () {
             setState(() {});

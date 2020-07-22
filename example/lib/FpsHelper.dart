@@ -18,7 +18,12 @@ class FpsHelper {
 
   FpsHelper._();
 
-  init(){
+  bool _start;
+
+  start(){
+    if (_start ?? false)
+      return;
+    _start = true;
     BindingFps.instance.init();
     BindingFps.instance.registerCallBack((fps, dropCount) {
       if (_aliFpsAvg == 0) {
