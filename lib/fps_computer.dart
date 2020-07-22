@@ -1,8 +1,8 @@
 import 'dart:collection';
 import 'dart:ui';
 import 'package:flutter/scheduler.dart';
-import 'package:fps/plugin/fps_plugin.dart';
 import 'fps_callback.dart';
+import 'plugin/fps_plugin.dart';
 import 'util/debug_log.dart';
 
 ///

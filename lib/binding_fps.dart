@@ -3,10 +3,9 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:fps/util/debug_log.dart';
-
 import 'fps_callback.dart';
 import 'plugin/fps_plugin.dart';
+import 'util/debug_log.dart';
 
 /// do what
 /// @author yulun

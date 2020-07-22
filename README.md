@@ -1,6 +1,7 @@
-# fps
+# performance_fps
 
-A new flutter plugin project.
+Flutter plugin for calculate fps online on Android and IOS,
+  its result is the same as flutter performance
 
 ## Getting Started
 
@@ -12,3 +13,14 @@ Android and/or iOS.
 For help getting started with Flutter, view our 
 [online documentation](https://flutter.dev/docs), which offers tutorials, 
 samples, guidance on mobile development, and a full API reference.
+
+#demo 
+
+#for start
+Fps.instance.registerCallBack((fps, dropCount) {
+      //fps is current fps
+    });
+    
+    
+#cancel 
+Fps.instance.cancel();
