@@ -1,9 +1,11 @@
-import 'package:flutter_just_test/fps/VDFps.dart';
-import 'package:flutter_just_test/fps/aliFps.dart';
+
+import 'package:fps/binding_fps.dart';
+import 'package:fps/fps_computer.dart';
 
 /// do what
 /// @author yulun
 /// @since 2020-07-17 19:36
+/// 测试辅助类
 class FpsHelper {
   static FpsHelper _instance;
 
@@ -17,8 +19,8 @@ class FpsHelper {
   FpsHelper._();
 
   init(){
-    aliFps.instance.init();
-    aliFps.instance.registerCallBack((fps, dropCount) {
+    BindingFps.instance.init();
+    BindingFps.instance.registerCallBack((fps, dropCount) {
       if (_aliFpsAvg == 0) {
         _aliFpsAvg = fps;
       } else {
@@ -36,7 +38,7 @@ class FpsHelper {
   }
 
   void cancel() {
-    aliFps.instance.cancel();
+    BindingFps.instance.cancel();
     Fps.instance.cancel();
   }
 

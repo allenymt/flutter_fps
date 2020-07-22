@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:fps/util/debug_log.dart';
 
 import 'fps_callback.dart';
+import 'plugin/fps_plugin.dart';
 
 /// do what
 /// @author yulun
@@ -13,14 +14,17 @@ import 'fps_callback.dart';
 /// 这个统计方式和fps_computer里的不一样，通过监听WidgetsBinding的handleBeginFrame和handleDrawFrame实现
 /// handleBeginFrame Called by the engine to prepare the framework to produce a new frame.
 /// handleDrawFrame Called by the engine to produce a new frame.
-class aliFps {
-  static aliFps _instance;
+/// 在一秒内计算从begin->draw调用了多少次，次数就是帧数，如果帧数少于手机的渲染帧数，会认为丢失了多少帧
+class BindingFps {
 
-  static final TAG = "aliFps";
+  /// 单例
+  static BindingFps _instance;
 
-  static aliFps get instance {
+  static final TAG = "BindingFps";
+
+  static BindingFps get instance {
     if (_instance == null) {
-      _instance = aliFps._();
+      _instance = BindingFps._();
     }
     return _instance;
   }
@@ -31,11 +35,14 @@ class aliFps {
   ListQueue<_FpsFrame> _frameQueue = ListQueue(MAX_FPS);
   bool _init;
   List<FpsCallback> _callBackList = [];
+  /// 一般手机为60帧
+  double _fpsHz;
 
-  aliFps._();
+  BindingFps._();
 
   init() {
     if (_init ?? false) {
+      // 避免重复初始化
       return;
     }
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -46,6 +53,7 @@ class aliFps {
     _init = true;
   }
 
+  /// 销毁
   cancel() {
     _timer?.cancel();
     _timer = null;
@@ -55,6 +63,7 @@ class aliFps {
     drawTimeCallback = null;
   }
 
+  /// 注册回调
   registerCallBack(FpsCallback back) {
     _callBackList?.add(back);
   }
@@ -63,7 +72,9 @@ class aliFps {
     _callBackList?.remove(back);
   }
 
+  /// 当前帧
   _FpsFrame _currentFrame;
+  /// 帧数的id
   var frameId = 1;
   FrameCallback beginTimeCallback;
   int beginCallId;
@@ -73,8 +84,11 @@ class aliFps {
     beginTimeCallback = (timeStamp) {
       // handle begin frame
       _beginFrame(timeStamp);
-      beginCallId =
-          WidgetsBinding.instance.scheduleFrameCallback(beginTimeCallback);
+
+      if (drawTimeCallback != null){
+        beginCallId =
+            WidgetsBinding.instance.scheduleFrameCallback(beginTimeCallback);
+      }
     };
 
     // 理论上每一帧应该都是先begin,再draw
@@ -115,11 +129,16 @@ class aliFps {
   }
 
   /// 计算fps
-  _calFps() {
+  _calFps() async{
     if (_frameQueue.isEmpty) {
       DebugLog.instance.log("$TAG,NO FRAME");
       return;
     }
+    // 获取当前手机的fps
+    if (_fpsHz == null) {
+      _fpsHz = await FpsPlugin.getRefreshRate;
+    }
+
     var _calFrameQueue = ListQueue(MAX_FPS);
     _calFrameQueue.addAll(_frameQueue);
     _frameQueue?.clear();
@@ -127,9 +146,8 @@ class aliFps {
     while (_calFrameQueue.length > MAX_FPS) {
       _calFrameQueue.removeLast();
     }
-    int FPS = 60; // 可以通过plugin获取
-    int drawFrame = _calFrameQueue.length;
-    int dropFrameCount = FPS - drawFrame;
+    double drawFrame = _calFrameQueue.length?.toDouble();
+    double dropFrameCount = _fpsHz - drawFrame;
     _callBackList?.forEach((callBack) {
       callBack(drawFrame.toDouble(), dropFrameCount.toDouble());
     });

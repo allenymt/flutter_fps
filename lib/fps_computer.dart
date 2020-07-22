@@ -9,6 +9,7 @@ import 'fps_callback.dart';
 /// 官方推荐的方式 SchedulerBinding.instance.addTimingsCallback
 /// 注意不能和window.onReportTimings一起用，会冲突
 /// 其帧率计算方式为 FPS=实际绘制帧数*fpsHz(一般是60hz,也有90，120的)/(实际绘制帧数+丢帧数)
+/// 参考文章 https://yrom.net/blog/2019/08/01/how-to-get-fps-in-flutter-app-codes/
 class Fps {
   /// 单例
   static Fps get instance {
@@ -96,7 +97,7 @@ class Fps {
             lastStart - timing.timestampInMicroseconds(FramePhase.rasterFinish);
         //相邻两帧如果开始结束相差时间过大，比如大于 frameInterval * 2，认为是不同绘制时间段产生的
         if (interval > (_frameInterval.inMicroseconds * 2)) {
-          break; //注意这里是break，这次循环结束了
+          break; //注意这里是break，这次循环结束了，虽然在同一个队列里，但有可能相邻的两帧不在一个时间段，所以不能放一起计算，有个开源的就是没处理这里
         }
         lastFramesSet.add(timing);
       }
