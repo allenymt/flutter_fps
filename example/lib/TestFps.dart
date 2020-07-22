@@ -60,7 +60,7 @@ class TestFpsState extends State<TestFpsWidget> {
             padding: EdgeInsets.only(top: 20,bottom: 20),
             alignment: Alignment.center,
             child: Text(
-                "bindingFps is ${FpsHelper.instance.aliFpsAvg?.floor()}, computerFps is ${FpsHelper.instance.wdFpsAvg?.floor()}"),
+                "bindingFps is ${FpsHelper.instance.bindingFpsAvg?.floor()}, computerFps is ${FpsHelper.instance.computeFpsAvg?.floor()}"),
             color: Colors.black12,
           ),
           onTap: () {

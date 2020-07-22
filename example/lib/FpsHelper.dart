@@ -24,18 +24,18 @@ class FpsHelper {
     _start = true;
     BindingFps.instance.start();
     BindingFps.instance.registerCallBack((fps, dropCount) {
-      if (_aliFpsAvg == 0) {
-        _aliFpsAvg = fps;
+      if (_bindingFpsAvg == 0) {
+        _bindingFpsAvg = fps;
       } else {
-        _aliFpsAvg = (fps + _aliFpsAvg) / 2;
+        _bindingFpsAvg = (fps + _bindingFpsAvg) / 2;
       }
     });
 
     Fps.instance.registerCallBack((fps, dropCount) {
-      if (_wdFpsAvg == 0) {
-        _wdFpsAvg = fps;
+      if (_computeFpsAvg == 0) {
+        _computeFpsAvg = fps;
       } else {
-        _wdFpsAvg = (fps + _wdFpsAvg) / 2;
+        _computeFpsAvg = (fps + _computeFpsAvg) / 2;
       }
     });
   }
@@ -45,10 +45,10 @@ class FpsHelper {
     Fps.instance.cancel();
   }
 
-  double _aliFpsAvg = 0;
-  double _wdFpsAvg = 0;
+  double _bindingFpsAvg = 0;
+  double _computeFpsAvg = 0;
 
-  double get aliFpsAvg => _aliFpsAvg;
+  double get bindingFpsAvg => _bindingFpsAvg;
 
-  double get wdFpsAvg => _wdFpsAvg;
+  double get computeFpsAvg => _computeFpsAvg;
 }
