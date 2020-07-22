@@ -22,14 +22,15 @@ class FpsHelper {
   start() {
     if (_start ?? false) return;
     _start = true;
-    BindingFps.instance.start();
-    BindingFps.instance.registerCallBack((fps, dropCount) {
-      if (_bindingFpsAvg == 0) {
-        _bindingFpsAvg = fps;
-      } else {
-        _bindingFpsAvg = (fps + _bindingFpsAvg) / 2;
-      }
-    });
+    //需要测试可以再打开
+//    BindingFps.instance.start();
+//    BindingFps.instance.registerCallBack((fps, dropCount) {
+//      if (_bindingFpsAvg == 0) {
+//        _bindingFpsAvg = fps;
+//      } else {
+//        _bindingFpsAvg = (fps + _bindingFpsAvg) / 2;
+//      }
+//    });
 
     Fps.instance.registerCallBack((fps, dropCount) {
       if (_computeFpsAvg == 0) {
@@ -41,7 +42,7 @@ class FpsHelper {
   }
 
   void cancel() {
-    BindingFps.instance.cancel();
+//    BindingFps.instance.cancel();
     Fps.instance.cancel();
   }
 
