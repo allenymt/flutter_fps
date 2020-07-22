@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - fps (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - fps (from `.symlinks/plugins/fps/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  fps:
+    :path: ".symlinks/plugins/fps/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  fps: 5b5c808a0e6165df1337763abaf83d815fe52e3e
+
+PODFILE CHECKSUM: f32fb4e7c14f8b3ca19a369d7be425dd9241af27
+
+COCOAPODS: 1.9.1
