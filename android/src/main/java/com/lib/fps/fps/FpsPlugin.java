@@ -1,5 +1,7 @@
 package com.lib.fps.fps;
 
+import android.content.Context;
+import android.view.WindowManager;
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -16,9 +18,12 @@ public class FpsPlugin implements FlutterPlugin, MethodCallHandler {
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
+  private Context context;
+
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
+    context = flutterPluginBinding.getApplicationContext();
     channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "fps");
     channel.setMethodCallHandler(this);
   }
@@ -39,8 +44,14 @@ public class FpsPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
+    if (call.method.equals("getRefreshRate")) {
+      try {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        float refreshRate = windowManager.getDefaultDisplay().getRefreshRate();
+        result.success(refreshRate);
+      } catch (Exception e) {
+        result.success(null);
+      }
     } else {
       result.notImplemented();
     }
