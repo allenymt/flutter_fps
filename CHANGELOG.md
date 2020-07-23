@@ -4,4 +4,8 @@
 
 ## 0.0.2
 
-* promote point ,update readme 
+* promote point ,update readme
+
+## 0.0.3
+ 
+* fix compile error
