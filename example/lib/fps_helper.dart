@@ -1,4 +1,4 @@
-import 'package:fps/fps_computer.dart';
+import 'package:performance_fps/fps_computer.dart';
 
 /// do what
 /// @author yulun

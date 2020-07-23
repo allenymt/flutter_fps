@@ -74,13 +74,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  fps:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.1"
   image:
     dependency: transitive
     description:
@@ -109,6 +102,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.6.4"
+  performance_fps:
+    dependency: "direct main"
+    description:
+      name: performance_fps
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.1"
   petitparser:
     dependency: transitive
     description:
