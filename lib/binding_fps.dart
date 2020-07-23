@@ -159,8 +159,8 @@ class BindingFps {
     _callBackList?.forEach((callBack) {
       callBack(drawFrame.toDouble(), dropFrameCount.toDouble());
     });
-    DebugLog.instance.log(
-        "BindingFps _fpsHz is $_fpsHz drawFrame is $drawFrame,dropFrameCount is $dropFrameCount");
+//    DebugLog.instance.log(
+//        "BindingFps _fpsHz is $_fpsHz drawFrame is $drawFrame,dropFrameCount is $dropFrameCount");
   }
 }
 

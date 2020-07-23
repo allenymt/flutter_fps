@@ -105,10 +105,10 @@ packages:
   performance_fps:
     dependency: "direct main"
     description:
-      name: performance_fps
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.1"
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.3"
   petitparser:
     dependency: transitive
     description:
