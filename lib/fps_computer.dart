@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'dart:ui';
+
 import 'package:flutter/scheduler.dart';
+
 import 'fps_callback.dart';
 import 'plugin/fps_plugin.dart';
 import 'util/debug_log.dart';
@@ -79,9 +81,8 @@ class Fps {
 
     //每帧消耗的时间，单位微秒
     if (_frameInterval == null) {
-      _frameInterval = Duration(
-          microseconds:
-              Duration.microsecondsPerSecond ~/ _fpsHz);
+      _frameInterval =
+          Duration(microseconds: Duration.microsecondsPerSecond ~/ _fpsHz);
     }
 
     for (FrameTiming timing in lastFrames) {
@@ -121,7 +122,8 @@ class Fps {
       // 所以只要droppedCount大于0 ，认为当前帧是丢帧的
       int droppedCount =
           (frame.totalSpan.inMicroseconds ~/ _frameInterval.inMicroseconds);
-      return droppedCount + 1; //自己本身绘制的一帧，这里加一是因为认为丢帧了，加1变成2或3，主要看实际消耗的时长，如果是正常帧，那就是0+1=1
+      return droppedCount +
+          1; //自己本身绘制的一帧，这里加一是因为认为丢帧了，加1变成2或3，主要看实际消耗的时长，如果是正常帧，那就是0+1=1
     }) //这里返回的其实是个list<int>
         .fold(
             0, //计算的初始值
@@ -131,7 +133,8 @@ class Fps {
     //丢帧数=总帧数-绘制帧数
     droppedCount = costCount - drawFramesCount;
     double fps = drawFramesCount * _fpsHz / costCount; //参考上面那四行公式
-    DebugLog.instance.log("computerFps _fpsHz is $_fpsHz drawFrame is $fps,dropFrameCount is $droppedCount");
+    DebugLog.instance.log(
+        "computerFps _fpsHz is $_fpsHz drawFrame is $fps,dropFrameCount is $droppedCount");
     lastFrames.clear();
     _callBackList?.forEach((callBack) {
       callBack(fps, droppedCount.toDouble());

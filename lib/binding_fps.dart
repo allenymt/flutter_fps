@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
+
 import 'fps_callback.dart';
 import 'plugin/fps_plugin.dart';
 import 'util/debug_log.dart';
@@ -19,8 +20,6 @@ import 'util/debug_log.dart';
 class BindingFps {
   /// 单例
   static BindingFps _instance;
-
-  static final TAG = "BindingFps";
 
   static BindingFps get instance {
     if (_instance == null) {
@@ -113,8 +112,7 @@ class BindingFps {
 
   _beginFrame() {
     if (_currentFrame == null) {
-      _currentFrame =
-          _FpsFrame(frameId++, frameStartTime: DateTime.now());
+      _currentFrame = _FpsFrame(frameId++, frameStartTime: DateTime.now());
     } else {
       _currentFrame.clear();
       if (frameId > 10000) frameId = 0;
@@ -125,12 +123,13 @@ class BindingFps {
 
   _drawFrame() {
     if (_currentFrame == null || _currentFrame?.frameStartTime == null) {
-      DebugLog.instance.log("$TAG,error not begin");
+      DebugLog.instance.log("bindingFps ,error not begin");
       return;
     }
 
     if ((_currentFrame?.frameId ?? 0) + 1 != frameId) {
-      DebugLog.instance.log("$TAG,error not call draw ,but call begin twice");
+      DebugLog.instance
+          .log("bindingFps,error not call draw ,but call begin twice");
       return;
     }
 
@@ -141,7 +140,7 @@ class BindingFps {
   /// 计算fps
   _calFps() async {
     if (_frameQueue.isEmpty) {
-      DebugLog.instance.log("$TAG,NO FRAME");
+      DebugLog.instance.log("bindingFps,NO FRAME");
       return;
     }
 

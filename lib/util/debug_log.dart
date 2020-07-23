@@ -6,7 +6,7 @@ class DebugLog {
 
   static DebugLog get instance => _instance;
 
-  bool _debug = true;
+  bool _debug = false;
 
   DebugLog._() {
     assert(() {

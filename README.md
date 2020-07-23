@@ -14,13 +14,27 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials, 
 samples, guidance on mobile development, and a full API reference.
 
-#demo 
+## Installation
+```yaml
+dependencies:
+  performance_fps: ^0.0.1
+```
 
-#for start
+### Import
+
+```dart
+import 'package:performance_fps/performance_fps.dart';
+```
+
+## Usage
+```dart
 Fps.instance.registerCallBack((fps, dropCount) {
-      //fps is current fps
+      // current fps
     });
     
-    
-#cancel 
 Fps.instance.cancel();
+```
+
+## License
+
+MIT License
