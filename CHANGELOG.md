@@ -9,3 +9,7 @@
 ## 0.0.3
  
 * fix compile error
+
+## 0.0.4
+ 
+* del log
