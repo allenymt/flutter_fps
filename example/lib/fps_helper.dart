@@ -1,4 +1,3 @@
-import 'package:fps/binding_fps.dart';
 import 'package:fps/fps_computer.dart';
 
 /// do what

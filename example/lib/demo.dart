@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'FpsHelper.dart';
+import 'fps_helper.dart';
 
 /// do what
 /// @author yulun
@@ -21,7 +21,7 @@ class TestFpsState extends State<TestFpsWidget> {
         GestureDetector(
           child: Container(
             margin: EdgeInsets.all(20),
-            padding: EdgeInsets.only(top: 20,bottom: 20),
+            padding: EdgeInsets.only(top: 20, bottom: 20),
             alignment: Alignment.center,
             child: Text(
               "open fps",
@@ -39,7 +39,7 @@ class TestFpsState extends State<TestFpsWidget> {
         GestureDetector(
           child: Container(
             margin: EdgeInsets.all(20),
-            padding: EdgeInsets.only(top: 20,bottom: 20),
+            padding: EdgeInsets.only(top: 20, bottom: 20),
             alignment: Alignment.center,
             child: Text(
               "close fps",
@@ -57,7 +57,7 @@ class TestFpsState extends State<TestFpsWidget> {
         GestureDetector(
           child: Container(
             margin: EdgeInsets.all(20),
-            padding: EdgeInsets.only(top: 20,bottom: 20),
+            padding: EdgeInsets.only(top: 20, bottom: 20),
             alignment: Alignment.center,
             child: Text(
                 "bindingFps is ${FpsHelper.instance.bindingFpsAvg?.floor()}, computerFps is ${FpsHelper.instance.computeFpsAvg?.floor()}"),
