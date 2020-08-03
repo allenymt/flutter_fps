@@ -6,6 +6,7 @@ import 'fps_helper.dart';
 /// do what
 /// @author yulun
 /// @since 2020-07-17 14:51
+/// 尽量在profile模式下测试 ，并且打开performance比对
 class TestFpsWidget extends StatefulWidget {
   @override
   State createState() {
@@ -60,7 +61,7 @@ class TestFpsState extends State<TestFpsWidget> {
             padding: EdgeInsets.only(top: 20, bottom: 20),
             alignment: Alignment.center,
             child: Text(
-                "bindingFps is ${FpsHelper.instance.bindingFpsAvg?.floor()}, computerFps is ${FpsHelper.instance.computeFpsAvg?.floor()}"),
+                "computerFps is ${FpsHelper.instance.computeFpsAvg?.floor()}"),
             color: Colors.black12,
           ),
           onTap: () {
