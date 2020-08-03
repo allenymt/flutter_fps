@@ -17,7 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 ## Installation
 ```yaml
 dependencies:
-  performance_fps: ^0.0.4
+  performance_fps: ^0.0.5
 ```
 
 ### Import

@@ -5,7 +5,6 @@ import 'package:flutter/scheduler.dart';
 
 import 'fps_callback.dart';
 import 'plugin/fps_plugin.dart';
-import 'util/debug_log.dart';
 
 ///
 /// fps 获取
