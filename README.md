@@ -27,6 +27,7 @@ import 'package:performance_fps/performance_fps.dart';
 ```
 
 ## Usage
+https://pub.dev/packages/performance_fps
 ```dart
 Fps.instance.registerCallBack((fps, dropCount) {
       // current fps
