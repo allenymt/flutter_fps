@@ -18,3 +18,7 @@
 ## 0.0.5
  
 * del unused import
+
+## 0.0.6
+ 
+* update demo
