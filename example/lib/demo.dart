@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'fps_helper.dart';
 
@@ -15,59 +16,53 @@ class TestFpsWidget extends StatefulWidget {
 }
 
 class TestFpsState extends State<TestFpsWidget> {
+  int _currentFps;
+  FrameCallback callback;
+
+  @override
+  initState() {
+    super.initState();
+    callback = (timeStamp) {
+      if (mounted) {
+        setState(() {
+          _currentFps = FpsHelper.instance.computeFpsAvg?.floor();
+        });
+      }
+    };
+    SchedulerBinding.instance.addPersistentFrameCallback(callback);
+    FpsHelper.instance.start();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    FpsHelper.instance.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: <Widget>[
-        GestureDetector(
-          child: Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.only(top: 20, bottom: 20),
-            alignment: Alignment.center,
+        GridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          padding: EdgeInsets.all(8),
+          children: List.generate(300, (index) {
+            return Stack(
+              children: <Widget>[
+                Text('$index'),
+              ],
+            );
+          }),
+        ),
+        Positioned(
+            right: 10,
+            top: 10,
             child: Text(
-              "open fps",
-              style: TextStyle(color: Colors.black),
-            ),
-            color: Colors.black12,
-          ),
-          onTap: () {
-            FpsHelper.instance.start();
-          },
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        GestureDetector(
-          child: Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.only(top: 20, bottom: 20),
-            alignment: Alignment.center,
-            child: Text(
-              "close fps",
-              style: TextStyle(color: Colors.black),
-            ),
-            color: Colors.black12,
-          ),
-          onTap: () {
-            FpsHelper.instance.cancel();
-          },
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        GestureDetector(
-          child: Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.only(top: 20, bottom: 20),
-            alignment: Alignment.center,
-            child: Text(
-                "computerFps is ${FpsHelper.instance.computeFpsAvg?.floor()}"),
-            color: Colors.black12,
-          ),
-          onTap: () {
-            setState(() {});
-          },
-        ),
+              "fps:$_currentFps",
+              style: TextStyle(color: Colors.red,fontSize: 20),
+            ))
       ],
     );
   }

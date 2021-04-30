@@ -4,4 +4,18 @@
 .packages
 .pub/
 
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+/.idea/
+
+# Visual Studio Code related
+.vscode/settings.json
+.settings/
+.project
+
 build/
+*.xcscheme
