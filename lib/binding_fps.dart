@@ -19,9 +19,9 @@ import 'util/debug_log.dart';
 @Deprecated("统计不准，只有cpu部分，即ui线程 build layout paint部分")
 class BindingFps {
   /// 单例
-  static BindingFps _instance;
+  static BindingFps? _instance;
 
-  static BindingFps get instance {
+  static BindingFps? get instance {
     if (_instance == null) {
       _instance = BindingFps._();
     }
@@ -30,13 +30,13 @@ class BindingFps {
 
   /// 1s里最高120hz了吧
   static const MAX_FPS = 120;
-  Timer _timer;
-  ListQueue<_FpsFrame> _frameQueue = ListQueue(MAX_FPS);
-  bool _init;
+  Timer? _timer;
+  ListQueue<_FpsFrame?> _frameQueue = ListQueue(MAX_FPS);
+  bool? _init;
   List<FpsCallback> _callBackList = [];
 
   /// 一般手机为60帧
-  double _fpsHz;
+  double? _fpsHz;
 
   BindingFps._();
 
@@ -64,7 +64,7 @@ class BindingFps {
     _timer?.cancel();
     _timer = null;
     if (beginCallId != null) {
-      WidgetsBinding.instance.cancelFrameCallbackWithId(beginCallId);
+      WidgetsBinding.instance!.cancelFrameCallbackWithId(beginCallId!);
     }
     drawTimeCallback = null;
   }
@@ -79,13 +79,13 @@ class BindingFps {
   }
 
   /// 当前帧
-  _FpsFrame _currentFrame;
+  _FpsFrame? _currentFrame;
 
   /// 帧数的id
   var frameId = 1;
-  FrameCallback beginTimeCallback;
-  int beginCallId;
-  FrameCallback drawTimeCallback;
+  late FrameCallback beginTimeCallback;
+  int? beginCallId;
+  FrameCallback? drawTimeCallback;
 
   _registerListener() {
     beginTimeCallback = (timeStamp) {
@@ -94,30 +94,30 @@ class BindingFps {
 
       if (drawTimeCallback != null) {
         beginCallId =
-            WidgetsBinding.instance.scheduleFrameCallback(beginTimeCallback);
+            WidgetsBinding.instance!.scheduleFrameCallback(beginTimeCallback);
       }
     };
 
     // 理论上每一帧应该都是先begin,再draw
     // 那有没有可能是上一针没draw完，下一帧begin开始了
     beginCallId =
-        WidgetsBinding.instance.scheduleFrameCallback(beginTimeCallback);
+        WidgetsBinding.instance!.scheduleFrameCallback(beginTimeCallback);
 
     drawTimeCallback = (timeStamp) {
       // handle draw frame
       _drawFrame();
     };
-    WidgetsBinding.instance.addPersistentFrameCallback(drawTimeCallback);
+    WidgetsBinding.instance!.addPersistentFrameCallback(drawTimeCallback!);
   }
 
   _beginFrame() {
     if (_currentFrame == null) {
       _currentFrame = _FpsFrame(frameId++, frameStartTime: DateTime.now());
     } else {
-      _currentFrame.clear();
+      _currentFrame!.clear();
       if (frameId > 10000) frameId = 0;
-      _currentFrame.frameId = frameId++;
-      _currentFrame.frameStartTime = DateTime.now();
+      _currentFrame!.frameId = frameId++;
+      _currentFrame!.frameStartTime = DateTime.now();
     }
   }
 
@@ -133,7 +133,7 @@ class BindingFps {
       return;
     }
 
-    _currentFrame.frameEndTime = DateTime.now();
+    _currentFrame!.frameEndTime = DateTime.now();
     _frameQueue.addFirst(_currentFrame);
   }
 
@@ -144,18 +144,18 @@ class BindingFps {
       return;
     }
 
-    while (_frameQueue.length > _fpsHz) {
+    while (_frameQueue.length > _fpsHz!) {
       _frameQueue.removeLast();
     }
 
     var _calFrameQueue = ListQueue(_frameQueue.length);
     _calFrameQueue.addAll(_frameQueue);
     _frameQueue?.clear();
-    while (_calFrameQueue.length > _fpsHz) {
+    while (_calFrameQueue.length > _fpsHz!) {
       _calFrameQueue.removeLast();
     }
-    double drawFrame = _calFrameQueue.length?.toDouble();
-    double dropFrameCount = _fpsHz - drawFrame;
+    double drawFrame = _calFrameQueue?.length?.toDouble() ?? 0;
+    double dropFrameCount = _fpsHz! - drawFrame;
     _callBackList?.forEach((callBack) {
       callBack(drawFrame.toDouble(), dropFrameCount.toDouble());
     });
@@ -165,13 +165,13 @@ class BindingFps {
 }
 
 class _FpsFrame {
-  DateTime frameStartTime;
-  DateTime frameEndTime;
+  DateTime? frameStartTime;
+  DateTime? frameEndTime;
   int frameId;
 
   _FpsFrame(this.frameId, {this.frameStartTime, this.frameEndTime});
 
-  int get frameTime => frameEndTime.millisecond - frameStartTime.millisecond;
+  int get frameTime => frameEndTime!.millisecond - frameStartTime!.millisecond;
 
   clear() {
     frameStartTime = null;

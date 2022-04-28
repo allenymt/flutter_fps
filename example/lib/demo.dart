@@ -16,8 +16,8 @@ class TestFpsWidget extends StatefulWidget {
 }
 
 class TestFpsState extends State<TestFpsWidget> {
-  int _currentFps;
-  FrameCallback callback;
+  int? _currentFps;
+  late FrameCallback callback;
 
   @override
   initState() {
@@ -25,11 +25,11 @@ class TestFpsState extends State<TestFpsWidget> {
     callback = (timeStamp) {
       if (mounted) {
         setState(() {
-          _currentFps = FpsHelper.instance.computeFpsAvg?.floor();
+          _currentFps = FpsHelper.instance.computeFpsAvg.floor();
         });
       }
     };
-    SchedulerBinding.instance.addPersistentFrameCallback(callback);
+    SchedulerBinding.instance!.addPersistentFrameCallback(callback);
     FpsHelper.instance.start();
   }
 

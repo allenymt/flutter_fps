@@ -18,15 +18,15 @@ class Fps {
     if (_instance == null) {
       _instance = Fps._();
     }
-    return _instance;
+    return _instance!;
   }
 
-  static Fps _instance;
+  static Fps? _instance;
 
   static const _maxFrames = 120; // 最大保存帧数据，100 帧足够了，对于 60 fps 来说
   final lastFrames =
       ListQueue<FrameTiming>(_maxFrames); //保存帧数据的队列，约定队头为最后一帧，队尾为开始一帧
-  TimingsCallback _timingsCallback;
+  TimingsCallback? _timingsCallback;
   List<FpsCallback> _callBackList = [];
 
   Fps._() {
@@ -34,29 +34,29 @@ class Fps {
       //异步计算fps
       _computeFps(timings);
     };
-    SchedulerBinding.instance.addTimingsCallback(_timingsCallback);
+    SchedulerBinding.instance!.addTimingsCallback(_timingsCallback!);
   }
 
   registerCallBack(FpsCallback back) {
-    _callBackList?.add(back);
+    _callBackList.add(back);
   }
 
   unregisterCallBack(FpsCallback back) {
-    _callBackList?.remove(back);
+    _callBackList.remove(back);
   }
 
   cancel() {
     if (_timingsCallback == null) {
       return;
     }
-    SchedulerBinding.instance.removeTimingsCallback(_timingsCallback);
+    SchedulerBinding.instance!.removeTimingsCallback(_timingsCallback!);
   }
 
   /// 一般手机为60帧
-  double _fpsHz;
+  double? _fpsHz;
 
   /// 60帧，那就是16.67ms*1000 微秒
-  Duration _frameInterval;
+  Duration? _frameInterval;
 
   /// 计算fps
   Future<void> _computeFps(List<FrameTiming> timings) async {
@@ -81,7 +81,7 @@ class Fps {
     //每帧消耗的时间，单位微秒
     if (_frameInterval == null) {
       _frameInterval =
-          Duration(microseconds: Duration.microsecondsPerSecond ~/ _fpsHz);
+          Duration(microseconds: Duration.microsecondsPerSecond ~/ _fpsHz!);
     }
 
     for (FrameTiming timing in lastFrames) {
@@ -97,7 +97,7 @@ class Fps {
         var interval =
             lastStart - timing.timestampInMicroseconds(FramePhase.rasterFinish);
         //相邻两帧如果开始结束相差时间过大，比如大于 frameInterval * 2，认为是不同绘制时间段产生的
-        if (interval > (_frameInterval.inMicroseconds * 2)) {
+        if (interval > (_frameInterval!.inMicroseconds * 2)) {
           break; //注意这里是break，这次循环结束了，虽然在同一个队列里，但有可能相邻的两帧不在一个时间段，所以不能放一起计算，有个开源的就是没处理这里
         }
         lastFramesSet.add(timing);
@@ -110,7 +110,7 @@ class Fps {
     // FPS / 60 = drawCount / (drawFramesCount + droppedCount)
     // costCount = (drawFramesCount + droppedCount)
     // FPS ≈  60 * drawFramesCount / costCount
-    int droppedCount = 0; //丢帧数
+    int? droppedCount = 0; //丢帧数
 
     // 计算总的帧数
     var costCount = lastFramesSet.map((frame) {
@@ -120,23 +120,23 @@ class Fps {
       // 17ms ~/ 16ms = 1
       // 所以只要droppedCount大于0 ，认为当前帧是丢帧的
       int droppedCount =
-          (frame.totalSpan.inMicroseconds ~/ _frameInterval.inMicroseconds);
+          (frame.totalSpan.inMicroseconds ~/ _frameInterval!.inMicroseconds);
       return droppedCount +
           1; //自己本身绘制的一帧，这里加一是因为认为丢帧了，加1变成2或3，主要看实际消耗的时长，如果是正常帧，那就是0+1=1
     }) //这里返回的其实是个list<int>
         .fold(
             0, //计算的初始值
-            (a, b) =>
+            (dynamic a, b) =>
                 a + b); //计算总的帧数，fold就是list[0]+list[1]+....list[list.len-1]
 
     //丢帧数=总帧数-绘制帧数
     droppedCount = costCount - drawFramesCount;
-    double fps = drawFramesCount * _fpsHz / costCount; //参考上面那四行公式
+    double fps = drawFramesCount * _fpsHz! / costCount; //参考上面那四行公式
 //    DebugLog.instance.log(
 //        "computerFps _fpsHz is $_fpsHz drawFrame is $fps,dropFrameCount is $droppedCount");
     lastFrames.clear();
-    _callBackList?.forEach((callBack) {
-      callBack(fps, droppedCount.toDouble());
+    _callBackList.forEach((callBack) {
+      callBack(fps, droppedCount!.toDouble());
     });
   }
 }

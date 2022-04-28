@@ -5,18 +5,18 @@ import 'package:performance_fps/fps_computer.dart';
 /// @since 2020-07-17 19:36
 /// 测试辅助类
 class FpsHelper {
-  static FpsHelper _instance;
+  static FpsHelper? _instance;
 
   static FpsHelper get instance {
     if (_instance == null) {
       _instance = FpsHelper._();
     }
-    return _instance;
+    return _instance!;
   }
 
   FpsHelper._();
 
-  bool _start;
+  bool? _start;
 
   start() {
     if (_start ?? false) return;
