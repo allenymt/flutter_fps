@@ -1,7 +1,7 @@
 name: performance_fps
 description: Flutter plugin for calculate fps online on Android and IOS,
   its result is the same as flutter performance
-version: 0.0.6
+version: 0.0.7
 homepage: https://github.com/allenyulun/flutter_fps
 
 environment:

@@ -22,3 +22,7 @@
 ## 0.0.6
  
 * update demo
+
+## 0.0.7
+
+* migrate null-safety
