@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -61,7 +60,7 @@ class TestFpsState extends State<TestFpsWidget> {
             top: 10,
             child: Text(
               "fps:$_currentFps",
-              style: TextStyle(color: Colors.red,fontSize: 20),
+              style: TextStyle(color: Colors.red, fontSize: 20),
             ))
       ],
     );

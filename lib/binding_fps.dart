@@ -71,11 +71,11 @@ class BindingFps {
 
   /// 注册回调
   registerCallBack(FpsCallback back) {
-    _callBackList?.add(back);
+    _callBackList.add(back);
   }
 
   unregisterCallBack(FpsCallback back) {
-    _callBackList?.remove(back);
+    _callBackList.remove(back);
   }
 
   /// 当前帧
@@ -150,13 +150,13 @@ class BindingFps {
 
     var _calFrameQueue = ListQueue(_frameQueue.length);
     _calFrameQueue.addAll(_frameQueue);
-    _frameQueue?.clear();
+    _frameQueue.clear();
     while (_calFrameQueue.length > _fpsHz!) {
       _calFrameQueue.removeLast();
     }
-    double drawFrame = _calFrameQueue?.length?.toDouble() ?? 0;
+    double drawFrame = _calFrameQueue.length.toDouble();
     double dropFrameCount = _fpsHz! - drawFrame;
-    _callBackList?.forEach((callBack) {
+    _callBackList.forEach((callBack) {
       callBack(drawFrame.toDouble(), dropFrameCount.toDouble());
     });
 //    DebugLog.instance.log(
